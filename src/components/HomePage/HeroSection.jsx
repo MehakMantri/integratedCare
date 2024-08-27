@@ -25,11 +25,11 @@ function HeroSection() {
         <h1 className="text-5xl md:text-7xl font-extrabold leading-tight mb-6 animate-fade-in">Healthify</h1>
         <p className="text-lg md:text-2xl mb-8 opacity-90 animate-fade-in delay-150">Innovative Solutions for Optimal Healthcare Management</p>
         <div className="flex justify-center gap-4">
-          <a href="#try-now" className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition transform hover:scale-105 duration-300">
-            Try Now
+          <a href="#book-appointment" className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition transform hover:scale-105 duration-300">
+            Book Appointment
           </a>
-          <a href="#contact" className="inline-block bg-gray-800 hover:bg-gray-700 text-white font-semibold py-3 px-6 rounded-lg transition transform hover:scale-105 duration-300">
-            Contact Us
+          <a href="/admin-dashboard" className="inline-block bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition transform hover:scale-105 duration-300">
+            Admin Dashboard
           </a>
         </div>
       </div>

@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 import HomePage from './components/HomePage/HomePage';
 import PatientPortal from './components/PatientPortal/PatientPortal';
+import AdminDashboard from './components/AdminDashboard.jsx/AdminDashboard';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
           {/* Use `element` prop and wrap the component in JSX */}
           <Route path="/" element={<HomePage />} />
           <Route path="/patient" element={<PatientPortal />} />
+          <Route path="/admin-dashboard" element={<AdminDashboard />} />
         </Routes>
       </div>
     </Router>
