@@ -1,16 +1,18 @@
-
 import React, { useState } from 'react';
 import Sidebar from './Sidebar';
 import QueueingModel from './QueueingModel';
 import BedAvailability from './BedAvailability';
 import PatientAdmission from './PatientAdmission';
 import InventoryManagement from './InventoryManagement';
+import DashboardSummary from './DashboardSummary'; // Import the new component
 
 function AdminDashboard() {
-  const [activeComponent, setActiveComponent] = useState('queuing');
+  const [activeComponent, setActiveComponent] = useState('dashboard'); // Set default to 'dashboard'
 
   const renderComponent = () => {
     switch (activeComponent) {
+      case 'dashboard':
+        return <DashboardSummary />;
       case 'queuing':
         return <QueueingModel />;
       case 'beds':
@@ -20,7 +22,7 @@ function AdminDashboard() {
       case 'inventory':
         return <InventoryManagement />;
       default:
-        return <QueueingModel />;
+        return <DashboardSummary />;
     }
   };
 
