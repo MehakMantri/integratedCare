@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Medical History for {{ patient.name }}</h1>
+
+<!-- Display the Patient ID -->
+<p>Patient ID: {{ patient_id }}</p>
+
+<!-- Display all medicines associated with this patient -->
+<h2>Medicine History:</h2>
+{% if medicines %}
+<table class="table">
+    <thead>
+        <tr>
+            <th>Medicine Name</th>
+            <th>Dosage (mg)</th>
+            <th>Frequency</th>
+            <th>Duration (days)</th>
+            <th>Remarks</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for medicine in medicines %}
+        <tr>
+            <td>{{ medicine.name }}</td>
+            <td>{{ medicine.dosage }}</td>
+            <td>{{ medicine.frequency }}</td>
+            <td>{{ medicine.duration }}</td>
+            <td>{{ medicine.remarks }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No medical history available for this patient.</p>
+{% endif %}
+{% endblock %}
