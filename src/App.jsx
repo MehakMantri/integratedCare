@@ -3,12 +3,12 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 import HomePage from './components/HomePage/HomePage';
 import PatientPortal from './components/PatientPortal/PatientPortal';
-import AdminDashboard from './components/AdminDashboard/AdminDashboard'; // Adjust the path as needed
-import { ThemeProvider } from './components/HomePage/ThemeContext'; // Adjust the path as needed
+import AdminDashboard from './components/AdminDashboard/AdminDashboard';
+import { ThemeProvider } from './components/HomePage/ThemeContext';
 
 function App() {
   return (
-    <ThemeProvider> {/* Wrap the Router with ThemeProvider */}
+    <ThemeProvider>
       <Router>
         <div className="min-h-screen bg-gray-100">
           <Routes>

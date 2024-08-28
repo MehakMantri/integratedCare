@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTheme } from './ThemeContext';
+import { Link } from 'react-router-dom'; // Import Link from React Router
 
 function HeroSection() {
   const { isDarkTheme } = useTheme();
@@ -26,9 +27,10 @@ function HeroSection() {
           <a href="#book-appointment" className={`inline-block ${isDarkTheme ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-white text-blue-600 hover:bg-blue-50'} font-semibold py-3 px-6 rounded-lg transition transform hover:scale-105 duration-300`}>
             Book Appointment
           </a>
-          <a href="/admin-dashboard" className={`inline-block ${isDarkTheme ? 'bg-green-600 hover:bg-green-700' : 'bg-blue-800 hover:bg-blue-900'} text-white font-semibold py-3 px-6 rounded-lg transition transform hover:scale-105 duration-300`}>
+          {/* Use Link component for client-side routing */}
+          <Link to="/admin-dashboard" className={`inline-block ${isDarkTheme ? 'bg-green-600 hover:bg-green-700' : 'bg-blue-800 hover:bg-blue-900'} text-white font-semibold py-3 px-6 rounded-lg transition transform hover:scale-105 duration-300`}>
             Admin Dashboard
-          </a>
+          </Link>
         </div>
       </div>
     </section>
