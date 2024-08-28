@@ -1,47 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import { useTheme } from '../HomePage/ThemeContext';
-import { FaUserPlus, FaUserMinus, FaArrowUp, FaArrowDown } from 'react-icons/fa';
+import { FaUserPlus, FaUserMinus, FaArrowUp, FaArrowDown, FaBed, FaHospital } from 'react-icons/fa';
 
 function QueueingModel() {
   const { isDarkTheme } = useTheme();
   const [departments, setDepartments] = useState([
-    {
-      id: 1,
-      name: 'General Medicine',
-      patients: [
-        { id: 101, name: 'John Doe', priority: 'normal', waitTime: 45, arrivalTime: '09:30 AM' },
-        { id: 102, name: 'Jane Smith', priority: 'high', waitTime: 15, arrivalTime: '09:45 AM' },
-        { id: 103, name: 'Bob Johnson', priority: 'low', waitTime: 60, arrivalTime: '10:00 AM' },
-      ]
-    },
-    {
-      id: 2,
-      name: 'Pediatrics',
-      patients: [
-        { id: 201, name: 'Emily Brown', priority: 'high', waitTime: 10, arrivalTime: '09:15 AM' },
-        { id: 202, name: 'Michael Davis', priority: 'normal', waitTime: 30, arrivalTime: '09:30 AM' },
-      ]
-    },
-    {
-      id: 3,
-      name: 'Orthopedics',
-      patients: [
-        { id: 301, name: 'Sarah Wilson', priority: 'normal', waitTime: 40, arrivalTime: '09:00 AM' },
-        { id: 302, name: 'David Lee', priority: 'high', waitTime: 20, arrivalTime: '09:20 AM' },
-        { id: 303, name: 'Lisa Taylor', priority: 'low', waitTime: 55, arrivalTime: '09:40 AM' },
-      ]
-    },
-    {
-      id: 4,
-      name: 'Cardiology',
-      patients: [
-        { id: 401, name: 'Robert White', priority: 'high', waitTime: 5, arrivalTime: '08:45 AM' },
-        { id: 402, name: 'Jennifer Green', priority: 'normal', waitTime: 35, arrivalTime: '09:10 AM' },
-      ]
-    },
+    { id: 1, name: 'General Medicine', patients: [] },
+    { id: 2, name: 'Pediatrics', patients: [] },
+    { id: 3, name: 'Orthopedics', patients: [] },
+    { id: 4, name: 'Cardiology', patients: [] },
   ]);
   const [selectedDepartment, setSelectedDepartment] = useState(1);
   const [newPatient, setNewPatient] = useState({ name: '', priority: 'normal' });
+  const [bedAvailability, setBedAvailability] = useState({
+    total: 100,
+    available: 30,
+    byDepartment: {
+      'General Medicine': 10,
+      'Pediatrics': 5,
+      'Orthopedics': 8,
+      'Cardiology': 7
+    }
+  });
+  const [cityWideStats, setCityWideStats] = useState({
+    totalPatients: 1000,
+    avgWaitTime: 45,
+    bedOccupancy: 75
+  });
 
   useEffect(() => {
     const interval = setInterval(updateWaitTimes, 60000); // Update wait times every minute
@@ -124,10 +109,58 @@ function QueueingModel() {
     }
   };
 
+  const admitPatient = (deptId, patientId) => {
+    const dept = departments.find(d => d.id === deptId);
+    if (dept && bedAvailability.byDepartment[dept.name] > 0) {
+      removePatient(deptId, patientId);
+      setBedAvailability(prev => ({
+        ...prev,
+        available: prev.available - 1,
+        byDepartment: {
+          ...prev.byDepartment,
+          [dept.name]: prev.byDepartment[dept.name] - 1
+        }
+      }));
+      // Here you would typically make an API call to update the city-wide module
+      updateCityWideStats();
+    } else {
+      alert('No beds available in this department');
+    }
+  };
+
+  const updateCityWideStats = () => {
+    // Simulating an API call to update and fetch city-wide statistics
+    setCityWideStats(prev => ({
+      totalPatients: prev.totalPatients + 1,
+      avgWaitTime: Math.round((prev.avgWaitTime * prev.totalPatients + 30) / (prev.totalPatients + 1)),
+      bedOccupancy: Math.round(((bedAvailability.total - bedAvailability.available + 1) / bedAvailability.total) * 100)
+    }));
+  };
+
   return (
     <div className={`p-6 ${isDarkTheme ? 'bg-gray-800 text-white' : 'bg-white text-gray-800'} rounded-lg shadow-md`}>
-      <h2 className={`text-2xl font-bold mb-4 ${isDarkTheme ? 'text-white' : 'text-blue-800'}`}>OPD Queuing Model</h2>
+      <h2 className={`text-2xl font-bold mb-4 ${isDarkTheme ? 'text-white' : 'text-blue-800'}`}>Hospital Queuing and Admission System</h2>
       
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        <div className={`p-4 rounded ${isDarkTheme ? 'bg-gray-700' : 'bg-blue-50'}`}>
+          <h3 className="font-bold mb-2">Bed Availability</h3>
+          <p>Total Beds: {bedAvailability.total}</p>
+          <p>Available Beds: {bedAvailability.available}</p>
+          <h4 className="font-semibold mt-2">By Department:</h4>
+          <ul>
+            {Object.entries(bedAvailability.byDepartment).map(([dept, beds]) => (
+              <li key={dept}>{dept}: {beds}</li>
+            ))}
+          </ul>
+        </div>
+        <div className={`p-4 rounded ${isDarkTheme ? 'bg-gray-700' : 'bg-blue-50'}`}>
+          <h3 className="font-bold mb-2">City-Wide Statistics</h3>
+          <p>Total Patients: {cityWideStats.totalPatients}</p>
+          <p>Average Wait Time: {cityWideStats.avgWaitTime} minutes</p>
+          <p>Bed Occupancy: {cityWideStats.bedOccupancy}%</p>
+        </div>
+      </div>
+
       <div className="mb-4">
         <select
           value={selectedDepartment}
@@ -206,22 +239,35 @@ function QueueingModel() {
                     </button>
                     <button
                       onClick={() => removePatient(dept.id, patient.id)}
-                      className="text-red-500 hover:text-red-600"
+                      className="mr-2 text-red-500 hover:text-red-600"
                       title="Remove Patient"
                     >
                       <FaUserMinus />
+                    </button>
+                    <button
+                      onClick={() => admitPatient(dept.id, patient.id)}
+                      className="text-blue-500 hover:text-blue-600"
+                      title="Admit Patient"
+                    >
+                      <FaBed />
                     </button>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
-          <button
-            onClick={() => getNextPatient(dept.id)}
-            className="mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-          >
-            Call Next Patient
-          </button>
+          <div className="mt-4 flex justify-between">
+            <button
+              onClick={() => getNextPatient(dept.id)}
+              className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+            >
+              Call Next Patient
+            </button>
+            <span className="text-sm">
+              <FaHospital className="inline mr-1" />
+              Available Beds: {bedAvailability.byDepartment[dept.name]}
+            </span>
+          </div>
         </div>
       ))}
     </div>
