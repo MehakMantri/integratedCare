@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+    <h2>Existing Floors:</h2>
+    
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Floor Name</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for floor in floors %}
+            <tr>
+                <th scope="row">{{ loop.index }}</th>
+                <td>Floor {{ floor.floor_count }}</td>
+                <td>
+                    <form method="POST" style="display:inline;">
+                        <input type="hidden" name="floor_id" value="{{ floor.id }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                        <button type="submit" name="delete_floor" class="btn btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}
