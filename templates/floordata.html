@@ -8,6 +8,7 @@
         <label for="bedcount">Input Here: </label>
         <input name="bedcount" type="number" id="bedcount" {% if bedcount %}disabled{% endif %} value="{{ bedcount }}">
         <button type="submit" class="btn btn-sm btn-warning" {% if bedcount %}disabled{% endif %}>Add</button>
+        <a class="btn btn-sm btn-secondary" href="{{url_for('home')}}">Back to Home</a>
     </form>
 
     {% if bedcount %}

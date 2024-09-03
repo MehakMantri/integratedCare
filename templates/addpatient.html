@@ -1,30 +1,24 @@
 {% extends "base.html" %}
 {% block content %}
 
-{% with messages = get_flashed_messages() %}
-{% if messages %}
-  <ul>
-    {% for message in messages %}
-      <div class="alert alert-primary" role="alert">
-        {{message}}
-      </div>
-    {% endfor %}
-  </ul>
-{% endif %}
-{% endwith %}
 
-<form method = 'POST' action = "{{url_for('addpatient')}}">
+<!-- Form for Adding Patient -->
+<form id="add-patient-form" method="POST" action="{{ url_for('addpatient') }}">
 
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
+    <!-- Patient Details Input Fields -->
     <label for="name">Name:</label>
-    <input type="text" name="name" id="name"><br>
+    <input type="text" name="name" id="name" required><br>
 
     <label for="gender">Gender: </label>
-    <select name="gender" id="gender"><option value="male">Male</option><option value="female">Female</option></select><br>
+    <select name="gender" id="gender" required>
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+    </select><br>
 
     <label for="state">State: </label>
-    <select name="state" id="state">
+    <select name="state" id="state" required>
         <option value="AP">Andhra Pradesh</option>
         <option value="AR">Arunachal Pradesh</option>
         <option value="AS">Assam</option>
@@ -63,26 +57,84 @@
         <option value="PY">Puducherry</option>
     </select><br>
 
-    <label for="phn_no">Phn No: </label>
-    <input type="number" name="phn_no" id="phn_no"><br>
+    <label for="phn_no">Phone No: </label>
+    <input type="number" name="phn_no" id="phn_no" required><br>
 
     <label for="weight">Weight: </label>
-    <input type="number" name="weight" id="weight"><br>
+    <input type="number" name="weight" id="weight" required><br>
 
     <label for="age">Age: </label>
-    <input type="number" name="age" id="age"><br>
+    <input type="number" name="age" id="age" required><br>
 
     <label for="blood">Blood Group: </label>
-    <select name="blood" id="blood"><option value="o+">O+</option><option value="o-">O-</option><option value="b+">B+</option></select><br>
+    <select name="blood" id="blood" required>
+        <option value="o+">O+</option>
+        <option value="o-">O-</option>
+        <option value="b+">B+</option>
+        <option value="b-">B-</option>
+        <option value="a+">A+</option>
+        <option value="a-">A-</option>
+        <option value="ab+">AB+</option>
+        <option value="ab-">AB-</option>
+    </select><br>
+
+    <label for="section">Section: </label>
+    <select name="section" id="section" required>
+        <option value="General Medicine">General Medicine</option>
+        <option value="Pediatrics">Pediatrics</option>
+        <option value="Orthopedics">Orthopedics</option>
+        <option value="Cardiology">Cardiology</option>
+    </select><br>
 
     <label for="f_name">Father's Name: </label>
-    <input type="text" name="f_name" id="f_name">
+    <input type="text" name="f_name" id="f_name" required><br>
 
-    <button type="submit" class="btn btn-primary">Submit</button>
-
-    <a href="{{url_for('queue')}}">visit Queue</a>
-
-
+    <!-- Submit Button -->
+    <button type="button" class="btn btn-primary" onclick="showConfirmationDialog()">Submit</button>
 </form>
+
+<div id="confirmation-dialog" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; border: 1px solid black; padding: 20px; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);">
+  <p>Do you want to print a hospital stamp head with patient details?</p>
+  <button onclick="handleConfirmation(true)">Yes</button>
+  <button onclick="handleConfirmation(false)">No</button>
+</div>
+
+<script>
+  function showConfirmationDialog() {
+      document.getElementById('confirmation-dialog').style.display = 'block';
+  }
+
+  function handleConfirmation(print) {
+      document.getElementById('confirmation-dialog').style.display = 'none';
+      const form = document.getElementById('add-patient-form');
+      if (print) {
+          // If user clicks "Yes", set hidden input and submit the form
+          const printInput = document.createElement('input');
+          printInput.type = 'hidden';
+          printInput.name = 'print';
+          printInput.value = 'yes';
+          form.appendChild(printInput);
+
+          // Submit the form
+          form.submit();
+
+          // Use a timeout to ensure form submission is processed before printing
+          setTimeout(() => {
+              window.print();
+          }, 500); // Adjust timeout as needed
+      } else {
+          // If user clicks "No", just submit the form
+          form.submit();
+      }
+  }
+
+  // Handle Enter key to submit the form
+  document.getElementById('add-patient-form').addEventListener('keypress', function(event) {
+      if (event.key === 'Enter') {
+          event.preventDefault(); // Prevent default form submission
+          showConfirmationDialog(); // Show the custom confirmation dialog
+      }
+  });
+</script>
 
 {% endblock %}
