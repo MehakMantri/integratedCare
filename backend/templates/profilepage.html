@@ -14,6 +14,7 @@
         <p class="card-text"><strong>Age:</strong> {{ patient.age }} years</p>
         <p class="card-text"><strong>Blood Group:</strong> {{ patient.blood_group }}</p>
         <p class="card-text"><strong>Father's Name:</strong> {{ patient.fathers_name }}</p>
+        <p class="card-text"><strong>Section:</strong> {{ patient.section }}</p>
         <a href="{{ url_for('bedinfo') }}">ALLOT BED TO {{ patient.name }} with ID: {{ patient.id }} </a>
     </div>
 </div>
@@ -26,9 +27,9 @@
     <div class="form-group">
         <label for="med_name">Name of Medicine:</label>
         <select name="med_name" id="med_name" required>
-            <option value="pcm">PCM</option>
-            <option value="aspirin">ASPIRIN</option>
-            <!-- Add more options as needed -->
+            {% for med in medicines %}
+                <option value="{{ med.name }}">{{ med.name }}</option>
+            {% endfor %}
         </select>
     </div>
     <div class="form-group">
@@ -59,6 +60,10 @@
         </select>
     </div>
     <div class="form-group">
+        <label for="qty">Quantity:</label>
+        <input name="qty" id="qty" type="number">
+    </div>
+    <div class="form-group">
         <label for="remarks">Remarks:</label>
         <input type="text" name="remarks" id="remarks">
     </div>
@@ -76,6 +81,7 @@
             <th>Dosage (mg)</th>
             <th>Frequency</th>
             <th>Duration (days)</th>
+            <th>QTY</th>
             <th>Remarks</th>
             <th>Action</th>
         </tr>
@@ -93,28 +99,53 @@
 <a href="{{ url_for('view_all') }}" class="btn btn-primary mt-3">Back to All Patients</a>
 
 <script>
-document.getElementById('medicine-form').addEventListener('keydown', function(event) {
-    if (event.key === 'Enter') {
-        event.preventDefault(); // Prevent default form submission
-        addMedicine();
-    }
-});
-
-document.getElementById('add-medicine').addEventListener('click', function() {
+   document.getElementById('add-medicine').addEventListener('click', function() {
     addMedicine();
 });
 
-document.getElementById('set-duration-same').addEventListener('click', function() {
+function addMedicine() {
+    var medName = document.getElementById('med_name').value;
+    var dosage = document.getElementById('dosage').value;
+    var freq = document.getElementById('freq').value;
     var duration = document.getElementById('duration').value;
-    if (duration) {
-        var rows = document.querySelectorAll('#medicine-items tr');
-        rows.forEach(function(row) {
-            row.cells[3].textContent = duration; // Update Duration cell
+    var qty = document.getElementById('qty').value; // Ensure qty is correctly fetched
+    var remarks = document.getElementById('remarks').value;
+
+    // Parse qty to ensure it's a number
+    qty = parseInt(qty, 10);
+
+    if (medName && dosage && freq && duration && !isNaN(qty)) {
+        var tableBody = document.getElementById('medicine-items');
+        var row = document.createElement('tr');
+
+        row.innerHTML = `
+            <td>${medName}</td>
+            <td>${dosage}mg</td>
+            <td>${freq}</td>
+            <td>${duration}</td>
+            <td>${qty}</td>
+            <td>${remarks}</td>
+            <td><button type="button" class="btn btn-sm btn-danger delete-btn">Delete</button></td>
+        `;
+
+        // Append the row to the table
+        tableBody.appendChild(row);
+
+        // Clear the inputs after adding
+        document.getElementById('med_name').selectedIndex = 0;
+        document.getElementById('dosage').selectedIndex = 0;
+        document.getElementById('freq').selectedIndex = 0;
+        document.getElementById('duration').selectedIndex = 0;
+        document.getElementById('qty').value = ''; // Clear qty input
+        document.getElementById('remarks').value = '';
+
+        row.querySelector('.delete-btn').addEventListener('click', function() {
+            tableBody.removeChild(row);
         });
     } else {
-        alert('Please enter a duration.');
+        alert('Please fill in all required fields and ensure quantity is a number.');
     }
-});
+}
 
 document.getElementById('save-all').addEventListener('click', function() {
     var medicines = [];
@@ -126,7 +157,8 @@ document.getElementById('save-all').addEventListener('click', function() {
             dosage: cells[1].textContent.replace('mg', ''),
             freq: cells[2].textContent,
             duration: cells[3].textContent,
-            remarks: cells[4].textContent
+            qty: parseInt(cells[4].textContent, 10), // Ensure qty is parsed as a number
+            remarks: cells[5].textContent
         });
     });
 
@@ -134,7 +166,7 @@ document.getElementById('save-all').addEventListener('click', function() {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRFToken': '{{ csrf_token() }}' // Ensure this matches the token used by Flask
+            'X-CSRFToken': '{{ csrf_token() }}'
         },
         body: JSON.stringify(medicines)
     }).then(response => response.json())
@@ -142,54 +174,12 @@ document.getElementById('save-all').addEventListener('click', function() {
         if (data.success) {
             alert('Medicines saved successfully!');
         } else {
-            alert('Error saving medicines.');
+            alert('Error saving medicines: ' + data.message);
         }
       }).catch(error => {
         console.error('Error:', error);
         alert('Error saving medicines.');
       });
-});
-
-function addMedicine() {
-    var medName = document.getElementById('med_name').value;
-    var dosage = document.getElementById('dosage').value;
-    var freq = document.getElementById('freq').value;
-    var duration = document.getElementById('duration').value;
-    var remarks = document.getElementById('remarks').value;
-
-    if (medName && dosage && freq && duration) {
-        var tableBody = document.getElementById('medicine-items');
-        var row = document.createElement('tr');
-
-        row.innerHTML = `
-            <td>${medName}</td>
-            <td>${dosage}mg</td>
-            <td>${freq}</td>
-            <td>${duration}</td>
-            <td>${remarks}</td>
-            <td><button class="btn btn-sm btn-danger delete-btn">Delete</button></td>
-        `;
-
-        // Append the row to the table
-        tableBody.appendChild(row);
-
-        // Clear the inputs after adding
-        document.getElementById('med_name').selectedIndex = 0;
-        document.getElementById('dosage').selectedIndex = 0;
-        document.getElementById('freq').selectedIndex = 0;
-        document.getElementById('duration').selectedIndex = 0;
-        document.getElementById('remarks').value = '';
-    } else {
-        alert('Please fill out all required fields.');
-    }
-}
-
-// Add event delegation for delete buttons
-document.getElementById('medicine-items').addEventListener('click', function(event) {
-    if (event.target.classList.contains('delete-btn')) {
-        var row = event.target.closest('tr');
-        row.remove();
-    }
 });
 </script>
 
