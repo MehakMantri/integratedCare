@@ -25,7 +25,7 @@ function Navbar() {
   };
 
   return (
-    <nav className={`fixed top-0 left-0 w-full bg-opacity-70 ${isDarkTheme ? 'bg-gray-900 text-white' : 'bg-white text-blue-600 bg-opacity-90'} shadow-lg z-50`}>
+    <nav className={`fixed top-0 left-0 w-full bg-opacity-60 ${isDarkTheme ? 'bg-gray-900 text-white' : 'bg-white text-blue-600 bg-opacity-90'} shadow-lg z-50`}>
       <div className="container mx-auto flex justify-between items-center py-5 px-4 ">
         <div className="flex items-center space-x-2">
           <FaHospital className={`text-2xl ${isDarkTheme ? 'text-blue-600' : 'text-blue-600'}`} />
