@@ -375,6 +375,217 @@
     flex-direction: column;
     gap: 32px;
 }
+/* patient-management */
+/* Base styles */
+body {
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+}
+
+/* Dark theme styles */
+body.dark-theme {
+  background-color: #1a202c;
+  color: #fff;
+}
+
+/* Patient Management container */
+#patient-management {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Tab buttons */
+.tab-button {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.tab-button i {
+  margin-right: 0.5rem;
+}
+
+body:not(.dark-theme) .tab-button {
+  background-color: #e2e8f0;
+  color: #4a5568;
+}
+
+body:not(.dark-theme) .tab-button:hover {
+  background-color: #cbd5e0;
+}
+
+body:not(.dark-theme) .tab-button.active {
+  background-color: #4299e1;
+  color: #fff;
+}
+
+body.dark-theme .tab-button {
+  background-color: #2d3748;
+  color: #cbd5e0;
+}
+
+body.dark-theme .tab-button:hover {
+  background-color: #4a5568;
+}
+
+body.dark-theme .tab-button.active {
+  background-color: #4299e1;
+  color: #fff;
+}
+
+/* Form styles */
+form {
+  margin-bottom: 1rem;
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  border: 1px solid #cbd5e0;
+  border-radius: 0.25rem;
+}
+
+body.dark-theme input,
+body.dark-theme select,
+body.dark-theme textarea {
+  background-color: #2d3748;
+  color: #fff;
+  border-color: #4a5568;
+}
+
+button {
+  padding: 0.5rem 1rem;
+  background-color: #4299e1;
+  color: #fff;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #3182ce;
+}
+
+/* Grid layout */
+.grid {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Utility classes */
+.rounded {
+  border-radius: 0.25rem;
+}
+
+.shadow {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+
+.mb-4 {
+  margin-bottom: 1rem;
+}
+
+.mt-4 {
+  margin-top: 1rem;
+}
+
+.p-4 {
+  padding: 1rem;
+}
+.container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .tab-buttons {
+            display: flex;
+            margin-bottom: 20px;
+        }
+
+        .tab-button {
+            padding: 10px 20px;
+            margin-right: 10px;
+            background-color: #ddd;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .tab-button.active {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .search-results {
+            margin-top: 20px;
+        }
+
+        .search-result-item {
+            background-color: #f9f9f9;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+
+        }
+
+.search-result-item:hover {
+    background-color: #e9e9e9;
+}
+
     </style>
 </head>
 <body>
@@ -560,114 +771,193 @@
                 </div>
             </div>
             
-            <!-- Add placeholder sections for other menu items -->
             <div id="patient-management" class="section">
-                <h2>Patient Management</h2>
-                <!-- Add content for patient management here -->
-            </div>
-            
-            <div id="queuing-model" class="section">
-                <div id="queueingModelContainer" class="queuing-model-container">
-                    <h2 class="title">Hospital Queuing and Admission System</h2>
-            
-                    <div class="stats-grid">
-                        <div class="stats-card bed-availability">
-                            <h3>Bed Availability</h3>
-                            <div class="stats-info">
-                                <p>Total Beds: <span id="totalBeds"></span></p>
-                                <p>Available Beds: <span id="availableBeds"></span></p>
-                            </div>
-                            <h4>By Department:</h4>
-                            <ul id="bedsByDepartment"></ul>
-                        </div>
-                        <div class="stats-card city-wide-stats">
-                            <h3>City-Wide Statistics</h3>
-                            <div class="stats-info">
-                                <p>Total Patients: <span id="totalPatients"></span></p>
-                                <p>Average Wait Time: <span id="avgWaitTime"></span> minutes</p>
-                                <p>Bed Occupancy: <span id="bedOccupancy"></span>%</p>
-                            </div>
-                        </div>
+                <h1>Patient Management</h1>
+        
+        <div class="tab-buttons">
+            <button class="tab-button" onclick="openTab('register')">Register</button>
+            <button class="tab-button" onclick="openTab('search')">Search</button>
+            <button class="tab-button" onclick="openTab('profile')">Profile</button>
+            <button class="tab-button" onclick="openTab('admission')">Admission</button>
+            <button class="tab-button" onclick="openTab('appointment')">Appointment</button>
+        </div>
+
+        <div id="register" class="tab-content">
+            <h2>Patient Registration</h2>
+            <form id="registration-form">
+                <input type="text" name="name" placeholder="Full Name" required>
+                <select name="gender" required>
+                    <option value="">Select Gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                </select>
+                <input type="date" name="dateOfBirth" required>
+                <input type="text" name="address" placeholder="Address" required>
+                <input type="tel" name="contactNumber" placeholder="Contact Number" required>
+                <button type="submit">Register Patient</button>
+            </form>
+        </div>
+
+        <div id="search" class="tab-content">
+            <h2>Patient Search</h2>
+            <form id="search-form">
+                <input type="text" name="searchTerm" placeholder="Search by name or ID" required>
+                <button type="submit">Search</button>
+            </form>
+            <div id="search-results" class="search-results"></div>
+        </div>
+
+        <div id="profile" class="tab-content">
+            <h2>Patient Profile</h2>
+            <div id="profile-content"></div>
+            <button id="edit-profile-btn" style="display: none;">Edit Profile</button>
+            <form id="edit-profile-form" style="display: none;">
+                <input type="text" name="name" placeholder="Full Name" required>
+                <input type="date" name="dateOfBirth" required>
+                <select name="gender" required>
+                    <option value="">Select Gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                </select>
+                <input type="text" name="address" placeholder="Address" required>
+                <input type="tel" name="contactNumber" placeholder="Contact Number" required>
+                <button type="submit">Save Changes</button>
+            </form>
+        </div>
+
+        <div id="admission" class="tab-content">
+            <h2>Patient Admission</h2>
+            <form id="admission-form">
+                <input type="date" name="admissionDate" required>
+                <input type="text" name="reasonForAdmission" placeholder="Reason for Admission" required>
+                <input type="number" name="expectedDuration" placeholder="Expected Duration (days)" required>
+                <input type="text" name="bedNumber" placeholder="Bed Number" required>
+                <button type="submit">Admit Patient</button>
+            </form>
+        </div>
+
+        <div id="appointment" class="tab-content">
+            <h2>Appointment Scheduling</h2>
+            <form id="appointment-form">
+                <input type="date" name="appointmentDate" required>
+                <input type="time" name="appointmentTime" required>
+                <input type="text" name="doctor" placeholder="Doctor's Name" required>
+                <textarea name="reason" placeholder="Reason for appointment" required></textarea>
+                <button type="submit">Schedule Appointment</button>
+            </form>
+        </div>
+    </div>
+     
+    <div id="queuing-model" class="section">
+        <div id="queueingModelContainer" class="queuing-model-container">
+            <h2 class="title">Hospital Queuing and Admission System</h2>
+    
+            <div class="stats-grid">
+                <div class="stats-card bed-availability">
+                    <h3>Bed Availability</h3>
+                    <div class="stats-info">
+                        <p>Total Beds: <span id="totalBeds"></span></p>
+                        <p>Available Beds: <span id="availableBeds"></span></p>
                     </div>
-            
-                    <div class="add-patient-section">
-                        <h3>Add New Patient</h3>
-                        <div class="add-patient-form">
-                            <input type="text" id="patientName" placeholder="Patient Name">
-                            <select id="patientPriority">
-                                <option value="low">Low Priority</option>
-                                <option value="normal">Normal Priority</option>
-                                <option value="high">High Priority</option>
-                            </select>
-                            <select id="departmentSelect">
-                                <!-- Department options will be populated by JavaScript -->
-                            </select>
-                            <button id="addPatientBtn" class="add-patient-button">
-                                <i class="fas fa-user-plus"></i> Add Patient
-                            </button>
-                        </div>
-                    </div>
-            
-                    <div id="departmentsList" class="departments-list">
-                        <!-- Department queues will be populated here by JavaScript -->
+                    <h4>By Department:</h4>
+                    <ul id="bedsByDepartment"></ul>
+                </div>
+                <div class="stats-card city-wide-stats">
+                    <h3>City-Wide Statistics</h3>
+                    <div class="stats-info">
+                        <p>Total Patients: <span id="totalPatients"></span></p>
+                        <p>Average Wait Time: <span id="avgWaitTime"></span> minutes</p>
+                        <p>Bed Occupancy: <span id="bedOccupancy"></span>%</p>
                     </div>
                 </div>
             </div>
-            <div id="inventory-management" class="section" style="padding: 1.5rem; background-color: white; color: #1a202c; border-radius: 0.5rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);">
-                <h2 style="font-size: 1.5rem; font-weight: bold; margin-bottom: 1rem; color: #2c5282;">Inventory Management</h2>
-                
-                <div style="margin-bottom: 1rem;">
-                    <select id="category-select" style="padding: 0.5rem; border-radius: 0.25rem; background-color: white; color: #1a202c; border: 1px solid #e2e8f0;">
-                        <option value="Medication">Medication</option>
-                        <option value="Medical Supplies">Medical Supplies</option>
-                        <option value="Equipment">Equipment</option>
+    
+            <div class="add-patient-section">
+                <h3>Add New Patient</h3>
+                <div class="add-patient-form">
+                    <input type="text" id="patientName" placeholder="Patient Name">
+                    <select id="patientPriority">
+                        <option value="low">Low Priority</option>
+                        <option value="normal">Normal Priority</option>
+                        <option value="high">High Priority</option>
                     </select>
-                </div>
-            
-                <div style="margin-bottom: 1.5rem; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
-                    <input type="text" id="new-item-name" placeholder="Item Name" style="padding: 0.5rem; border-radius: 0.25rem; background-color: white; color: #1a202c; border: 1px solid #e2e8f0;">
-                    <input type="number" id="new-item-quantity" placeholder="Quantity" style="padding: 0.5rem; border-radius: 0.25rem; background-color: white; color: #1a202c; border: 1px solid #e2e8f0;">
-                    <input type="text" id="new-item-unit" placeholder="Unit (e.g., tablets, pieces)" style="padding: 0.5rem; border-radius: 0.25rem; background-color: white; color: #1a202c; border: 1px solid #e2e8f0;">
-                    <input type="number" id="new-item-min-stock" placeholder="Minimum Stock Level" style="padding: 0.5rem; border-radius: 0.25rem; background-color: white; color: #1a202c; border: 1px solid #e2e8f0;">
-                    <input type="date" id="new-item-expiry-date" placeholder="Expiry Date (if applicable)" style="padding: 0.5rem; border-radius: 0.25rem; background-color: white; color: #1a202c; border: 1px solid #e2e8f0;">
-                    <button id="add-new-item" style="background-color: #4299e1; color: white; padding: 0.5rem 1rem; border-radius: 0.25rem; hover:background-color: #3182ce;">Add New Item</button>
-                </div>
-            
-                <div style="margin-bottom: 1.5rem; background-color: #ebf8ff; padding: 1rem; border-radius: 0.25rem; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);">
-                    <h3 style="font-weight: bold; color: #2c5282; margin-bottom: 0.5rem;">Current Inventory</h3>
-                    <table style="width: 100%;">
-                        <thead>
-                            <tr style="background-color: #bee3f8;">
-                                <th style="padding: 0.5rem; text-align: left;">Name</th>
-                                <th style="padding: 0.5rem; text-align: left;">Category</th>
-                                <th style="padding: 0.5rem; text-align: left;">Quantity</th>
-                                <th style="padding: 0.5rem; text-align: left;">Min Stock</th>
-                                <th style="padding: 0.5rem; text-align: left;">Expiry Date</th>
-                                <th style="padding: 0.5rem; text-align: left;">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="inventory-table-body">
-                            <!-- Inventory items will be dynamically added here -->
-                        </tbody>
-                    </table>
-                </div>
-            
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
-                    <div style="background-color: #ebf8ff; padding: 1rem; border-radius: 0.25rem; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);">
-                        <h3 style="font-weight: bold; color: #2c5282; margin-bottom: 0.5rem;">Pending Orders</h3>
-                        <ul id="pending-orders-list" style="list-style-type: none; padding: 0;">
-                            <!-- Pending orders will be dynamically added here -->
-                        </ul>
-                    </div>
-            
-                    <div style="background-color: #ebf8ff; padding: 1rem; border-radius: 0.25rem; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);">
-                        <h3 style="font-weight: bold; color: #2c5282; margin-bottom: 0.5rem;">Recent Usage History</h3>
-                        <ul id="usage-history-list" style="list-style-type: none; padding: 0;">
-                            <!-- Usage history will be dynamically added here -->
-                        </ul>
-                    </div>
+                    <select id="departmentSelect">
+                        <!-- Department options will be populated by JavaScript -->
+                    </select>
+                    <button id="addPatientBtn" class="add-patient-button">
+                        <i class="fas fa-user-plus"></i> Add Patient
+                    </button>
                 </div>
             </div>
+    
+            <div id="departmentsList" class="departments-list">
+                <!-- Department queues will be populated here by JavaScript -->
+            </div>
+        </div>
+    </div>
+    <div id="inventory-management" class="section" style="padding: 1.5rem; background-color: white; color: #1a202c; border-radius: 0.5rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);">
+        <h2 style="font-size: 1.5rem; font-weight: bold; margin-bottom: 1rem; color: #2c5282;">Inventory Management</h2>
+        
+        <div style="margin-bottom: 1rem;">
+            <select id="category-select" style="padding: 0.5rem; border-radius: 0.25rem; background-color: white; color: #1a202c; border: 1px solid #e2e8f0;">
+                <option value="Medication">Medication</option>
+                <option value="Medical Supplies">Medical Supplies</option>
+                <option value="Equipment">Equipment</option>
+            </select>
+        </div>
+    
+        <div style="margin-bottom: 1.5rem; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
+            <input type="text" id="new-item-name" placeholder="Item Name" style="padding: 0.5rem; border-radius: 0.25rem; background-color: white; color: #1a202c; border: 1px solid #e2e8f0;">
+            <input type="number" id="new-item-quantity" placeholder="Quantity" style="padding: 0.5rem; border-radius: 0.25rem; background-color: white; color: #1a202c; border: 1px solid #e2e8f0;">
+            <input type="text" id="new-item-unit" placeholder="Unit (e.g., tablets, pieces)" style="padding: 0.5rem; border-radius: 0.25rem; background-color: white; color: #1a202c; border: 1px solid #e2e8f0;">
+            <input type="number" id="new-item-min-stock" placeholder="Minimum Stock Level" style="padding: 0.5rem; border-radius: 0.25rem; background-color: white; color: #1a202c; border: 1px solid #e2e8f0;">
+            <input type="date" id="new-item-expiry-date" placeholder="Expiry Date (if applicable)" style="padding: 0.5rem; border-radius: 0.25rem; background-color: white; color: #1a202c; border: 1px solid #e2e8f0;">
+            <button id="add-new-item" style="background-color: #4299e1; color: white; padding: 0.5rem 1rem; border-radius: 0.25rem; hover:background-color: #3182ce;">Add New Item</button>
+        </div>
+    
+        <div style="margin-bottom: 1.5rem; background-color: #ebf8ff; padding: 1rem; border-radius: 0.25rem; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);">
+            <h3 style="font-weight: bold; color: #2c5282; margin-bottom: 0.5rem;">Current Inventory</h3>
+            <table style="width: 100%;">
+                <thead>
+                    <tr style="background-color: #bee3f8;">
+                        <th style="padding: 0.5rem; text-align: left;">Name</th>
+                        <th style="padding: 0.5rem; text-align: left;">Category</th>
+                        <th style="padding: 0.5rem; text-align: left;">Quantity</th>
+                        <th style="padding: 0.5rem; text-align: left;">Min Stock</th>
+                        <th style="padding: 0.5rem; text-align: left;">Expiry Date</th>
+                        <th style="padding: 0.5rem; text-align: left;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="inventory-table-body">
+                    <!-- Inventory items will be dynamically added here -->
+                </tbody>
+            </table>
+        </div>
+    
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+            <div style="background-color: #ebf8ff; padding: 1rem; border-radius: 0.25rem; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);">
+                <h3 style="font-weight: bold; color: #2c5282; margin-bottom: 0.5rem;">Pending Orders</h3>
+                <ul id="pending-orders-list" style="list-style-type: none; padding: 0;">
+                    <!-- Pending orders will be dynamically added here -->
+                </ul>
+            </div>
+    
+            <div style="background-color: #ebf8ff; padding: 1rem; border-radius: 0.25rem; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);">
+                <h3 style="font-weight: bold; color: #2c5282; margin-bottom: 0.5rem;">Recent Usage History</h3>
+                <ul id="usage-history-list" style="list-style-type: none; padding: 0;">
+                    <!-- Usage history will be dynamically added here -->
+                </ul>
+            </div>
+        </div>
+    </div>
+            
+    </div>
+
+    </div>
+
+           
         </div>
     </div>
 
@@ -1075,6 +1365,29 @@
 window.removePatient = removePatient;
 window.admitPatient = admitPatient;
 });
+function openTab(tabName) {
+            var i, tabContent, tabButtons;
+            tabContent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabContent.length; i++) {
+                tabContent[i].style.display = "none";
+            }
+            tabButtons = document.getElementsByClassName("tab-button");
+            for (i = 0; i < tabButtons.length; i++) {
+                tabButtons[i].className = tabButtons[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).style.display = "block";
+            event.currentTarget.className += " active";
+        }
+        document.getElementById("registration-form").addEventListener("submit", function(e) {
+            e.preventDefault();
+            alert("Patient registered successfully!");
+        });
+
+        document.getElementById("search-form").addEventListener("submit", function(e) {
+            e.preventDefault();
+            var searchResults = document.getElementById("search-results");
+            searchResults.innerHTML = "<div class='search-result-item'>John Doe (ID: 12345)</div>";
+        });
 
 
     </script>
