@@ -230,7 +230,152 @@
                 margin-bottom: 10px;
             }
         }
-       </style>
+        /* queuing-model */
+        .queuing-model-container {
+    background-color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 24px;
+    margin: 16px;
+}
+
+.title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 24px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+    margin-bottom: 32px;
+}
+
+@media (min-width: 768px) {
+    .stats-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.stats-card {
+    padding: 16px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.bed-availability {
+    background-color: #e6f2ff;
+}
+
+.city-wide-stats {
+    background-color: #e6fff0;
+}
+
+.stats-card h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #2c5282;
+    margin-bottom: 16px;
+}
+
+.stats-card h4 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #2c5282;
+    margin-top: 16px;
+    margin-bottom: 8px;
+}
+
+.stats-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.stats-info p {
+    margin: 0;
+}
+
+#bedsByDepartment {
+    list-style-type: disc;
+    padding-left: 20px;
+}
+
+.add-patient-section {
+    margin-bottom: 32px;
+}
+
+.add-patient-section h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 16px;
+}
+.add-patient-form {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+}
+
+@media (max-width: 768px) {
+    .add-patient-form {
+        grid-template-columns: 1fr;
+    }
+}
+
+.add-patient-form input,
+.add-patient-form select,
+.add-patient-form button {
+    width: 100%;
+    height:48px;
+    padding:0 12px;
+    border: 1px solid #bdc3c7;
+    border-radius: 4px;
+    font-size: 14px;
+    box-sizing: border-box;
+    appearance: none; /* Remove default styling for select elements */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-color: white;
+
+}
+.add-patient-form select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23333' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: calc(100% - 12px) center;
+    padding-right: 28px;
+}
+
+.add-patient-button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    cursor: pointer;
+    /* transition: background-color 0.3s; */
+    font-size: 14px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.add-patient-button:hover {
+    background-color: #2980b9;
+}
+
+.add-patient-button i {
+    margin-right: 8px;
+}
+
+ 
+.departments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+    </style>
 </head>
 <body>
     <div class="flex h-screen bg-blue-50 text-gray-900">
@@ -239,7 +384,7 @@
             <nav>
                 <a class="active" data-section="dashboard">Dashboard</a>
                 <a data-section="patient-management">Patient Management</a>
-                <a data-section="queuing-models">Queuing Models</a>
+                <a data-section="queuing-model">Queuing Models</a>
                 <a data-section="bed-availability">Bed Availability</a>
                 <a data-section="inventory-management">Inventory Management</a>
             </nav>
@@ -421,11 +566,53 @@
                 <!-- Add content for patient management here -->
             </div>
             
-            <div id="queuing-models" class="section">
-                <h2>Queuing Models</h2>
-                <!-- Add content for queuing models here -->
-            </div>
+            <div id="queuing-model" class="section">
+                <div id="queueingModelContainer" class="queuing-model-container">
+                    <h2 class="title">Hospital Queuing and Admission System</h2>
             
+                    <div class="stats-grid">
+                        <div class="stats-card bed-availability">
+                            <h3>Bed Availability</h3>
+                            <div class="stats-info">
+                                <p>Total Beds: <span id="totalBeds"></span></p>
+                                <p>Available Beds: <span id="availableBeds"></span></p>
+                            </div>
+                            <h4>By Department:</h4>
+                            <ul id="bedsByDepartment"></ul>
+                        </div>
+                        <div class="stats-card city-wide-stats">
+                            <h3>City-Wide Statistics</h3>
+                            <div class="stats-info">
+                                <p>Total Patients: <span id="totalPatients"></span></p>
+                                <p>Average Wait Time: <span id="avgWaitTime"></span> minutes</p>
+                                <p>Bed Occupancy: <span id="bedOccupancy"></span>%</p>
+                            </div>
+                        </div>
+                    </div>
+            
+                    <div class="add-patient-section">
+                        <h3>Add New Patient</h3>
+                        <div class="add-patient-form">
+                            <input type="text" id="patientName" placeholder="Patient Name">
+                            <select id="patientPriority">
+                                <option value="low">Low Priority</option>
+                                <option value="normal">Normal Priority</option>
+                                <option value="high">High Priority</option>
+                            </select>
+                            <select id="departmentSelect">
+                                <!-- Department options will be populated by JavaScript -->
+                            </select>
+                            <button id="addPatientBtn" class="add-patient-button">
+                                <i class="fas fa-user-plus"></i> Add Patient
+                            </button>
+                        </div>
+                    </div>
+            
+                    <div id="departmentsList" class="departments-list">
+                        <!-- Department queues will be populated here by JavaScript -->
+                    </div>
+                </div>
+            </div>
             <div id="inventory-management" class="section" style="padding: 1.5rem; background-color: white; color: #1a202c; border-radius: 0.5rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);">
                 <h2 style="font-size: 1.5rem; font-weight: bold; margin-bottom: 1rem; color: #2c5282;">Inventory Management</h2>
                 
@@ -503,8 +690,43 @@
                     // Update active state in sidebar
                     sidebarLinks.forEach(link => link.classList.remove('active'));
                     this.classList.add('active');
+
+                    // If Queuing Model is selected, initialize it
+                    if (sectionId === 'queuing-model') {
+                        initializeQueueingModel();
+                    }
                 });
             });
+
+            function initializeQueueingModel() {
+                const container = document.getElementById('queueingModelContainer');
+                container.style.display = 'block';
+                
+                // Only initialize if it hasn't been initialized before
+                if (!container.hasChildNodes()) {
+                    const queueingModel = document.createElement('div');
+                    queueingModel.id = 'queueingModel';
+                    queueingModel.className = 'queuing-model';
+                    container.appendChild(queueingModel);
+
+                    // Here, you would call your function to set up the Queuing Model
+                    setupQueueingModel(queueingModel);
+                }
+            }
+
+            function setupQueueingModel(element) {
+                // This function should contain all the logic to set up your Queuing Model
+                // It should be similar to the content of your QueueingModel.js file
+                // For example:
+                element.innerHTML = `
+                    <h2 class="title">Hospital Queuing and Admission System</h2>
+                    <!-- Rest of your Queuing Model HTML -->
+                `;
+
+                // Initialize your Queuing Model logic here
+                // This is where you'd put all the JavaScript from your QueueingModel.js
+                // ...
+            }
         });
 
         // Add this new function to handle bed allocation and discharge
@@ -694,6 +916,166 @@
             }
         }, 3600000);
     });
+    document.addEventListener('DOMContentLoaded', function() {
+    const departments = [
+        { id: 1, name: 'General Medicine', patients: [] },
+        { id: 2, name: 'Pediatrics', patients: [] },
+        { id: 3, name: 'Orthopedics', patients: [] },
+        { id: 4, name: 'Cardiology', patients: [] },
+    ];
+
+    let bedAvailability = {
+        total: 100,
+        available: 30,
+        byDepartment: {
+            'General Medicine': 10,
+            'Pediatrics': 5,
+            'Orthopedics': 8,
+            'Cardiology': 7
+        }
+    };let cityWideStats = {
+        totalPatients: 1000,
+        avgWaitTime: 45,
+        bedOccupancy: 70
+    };
+
+    function initializeQueueingModel() {
+        populateDepartmentSelect();
+        updateBedAvailability();
+        updateCityWideStats();
+        setupEventListeners();
+        updateDepartmentQueues();
+    }
+
+    function populateDepartmentSelect() {
+        const select = document.getElementById('departmentSelect');
+        departments.forEach(dept => {
+            const option = document.createElement('option');
+            option.value = dept.id;
+            option.textContent = dept.name;
+            select.appendChild(option);
+        });
+    }
+    function updateBedAvailability() {
+        document.getElementById('totalBeds').textContent = bedAvailability.total;
+        document.getElementById('availableBeds').textContent = bedAvailability.available;
+        const bedsList = document.getElementById('bedsByDepartment');
+        bedsList.innerHTML = '';
+        for (const [dept, beds] of Object.entries(bedAvailability.byDepartment)) {
+            const li = document.createElement('li');
+            li.textContent = `${dept}: ${beds}`;
+            bedsList.appendChild(li);
+        }
+    }
+
+    function updateCityWideStats() {
+        document.getElementById('totalPatients').textContent = cityWideStats.totalPatients;
+        document.getElementById('avgWaitTime').textContent = cityWideStats.avgWaitTime;
+        document.getElementById('bedOccupancy').textContent = cityWideStats.bedOccupancy;
+    }
+
+    function setupEventListeners() {
+        document.getElementById('addPatientBtn').addEventListener('click', addPatient);
+    } function addPatient() {
+        const name = document.getElementById('patientName').value.trim();
+        const priority = document.getElementById('patientPriority').value;
+        const departmentId = parseInt(document.getElementById('departmentSelect').value);
+
+        if (name === '') return;
+
+        const department = departments.find(d => d.id === departmentId);
+        if (department) {
+            const newPatient = {
+                id: Date.now(),
+                name: name,
+                priority: priority,
+                waitTime: estimateWaitTime(department.patients.length, priority),
+                arrivalTime: new Date().toLocaleTimeString(),
+            };
+            department.patients.push(newPatient);
+            updateDepartmentQueues();
+            updateCityWideStats();
+
+            // Reset form
+            document.getElementById('patientName').value = '';
+            document.getElementById('patientPriority').value = 'normal';
+        }
+    }function estimateWaitTime(queueLength, priority) {
+        const baseTime = queueLength * 15; // Assume 15 minutes per patient
+        switch (priority) {
+            case 'high': return Math.max(15, baseTime * 0.5);
+            case 'low': return baseTime * 1.5;
+            default: return baseTime;
+        }
+    }
+
+    function updateDepartmentQueues() {
+        const departmentsList = document.getElementById('departmentsList');
+        departmentsList.innerHTML = '';
+
+        departments.forEach(dept => {
+            const deptDiv = document.createElement('div');
+            deptDiv.className = 'department-card';
+            deptDiv.innerHTML = `
+                <h3>${dept.name}</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Priority</th>
+                            <th>Wait Time</th>
+                            <th>Arrival Time</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${dept.patients.map(patient => `
+                            <tr>
+                                <td>${patient.name}</td>
+                                <td>${patient.priority}</td>
+                                <td>${patient.waitTime} min</td>
+                                <td>${patient.arrivalTime}</td>
+                                <td>
+                                    <button onclick="removePatient(${dept.id}, ${patient.id})">Remove</button>
+                                    <button onclick="admitPatient(${dept.id}, ${patient.id})">Admit</button>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+            departmentsList.appendChild(deptDiv);
+        });
+    }
+    function removePatient(deptId, patientId) {
+        const department = departments.find(d => d.id === deptId);
+        if (department) {
+            department.patients = department.patients.filter(p => p.id !== patientId);
+            updateDepartmentQueues();
+            updateCityWideStats();
+        }
+    }
+
+    function admitPatient(deptId, patientId) {
+        const department = departments.find(d => d.id === deptId);
+        if (department && bedAvailability.byDepartment[department.name] > 0) {
+            department.patients = department.patients.filter(p => p.id !== patientId);
+            bedAvailability.available--;
+            bedAvailability.byDepartment[department.name]--;
+            updateDepartmentQueues();
+            updateBedAvailability();
+            updateCityWideStats();
+        } else {
+            alert('No beds available in this department');
+        }
+    }
+    initializeQueueingModel();
+
+// Make functions available globally for onclick events
+window.removePatient = removePatient;
+window.admitPatient = admitPatient;
+});
+
 
     </script>
 </body>
