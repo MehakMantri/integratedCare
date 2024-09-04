@@ -13,10 +13,12 @@ function HomePage() {
     <ThemeProvider>
       <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
         <Navbar />
-        <HeroSection />
-        <FeaturesOverview />
-        <BenefitsSection />
-        <Testimonials />
+        <main>
+          <section id="home"><HeroSection /></section>
+          <section id="features"><FeaturesOverview /></section>
+          <section id="benefits"><BenefitsSection /></section>
+          <section id="testimonials"><Testimonials /></section>
+        </main>
         <Footer />
       </div>
     </ThemeProvider>

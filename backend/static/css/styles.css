@@ -1,0 +1,570 @@
+/* Base styles */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to bottom, #149ee9, #ffffff);
+}
+
+/* Navbar styles */
+/* Navbar container */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.7); /* Light theme with 70% opacity */
+    color: #1e3a8a; /* Default text color */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 50;
+    padding: 1rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+/* Dark theme styles */
+.navbar.dark {
+    background-color: rgba(17, 24, 39, 0.9); /* Dark theme background */
+    color: white; /* Dark theme text color */
+}
+
+/* Navbar brand logo */
+.navbar .brand-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.navbar .brand-logo .logo-icon {
+    font-size: 1.5rem;
+    color: #1e3a8a; /* Logo icon color */
+}
+
+.navbar .brand-logo .brand-text {
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+/* Navbar menu links */
+.navbar .nav-links {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.navbar .nav-links a {
+    font-size: 1rem;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    text-decoration: none;
+}
+
+/* Light theme link hover effect */
+.navbar .nav-links a:hover {
+    color: #1e40af; /* Darker shade for hover */
+}
+
+/* Dark theme link hover effect */
+.navbar.dark .nav-links a:hover {
+    color: #bfdbfe; /* Lighter shade for hover */
+}
+
+/* Theme toggle button */
+.navbar .theme-toggle-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    font-size: 1.5rem;
+}
+
+/* Theme toggle icon colors */
+.navbar .theme-toggle-button .sun-icon {
+    color: #fbbf24; /* Sun icon color for dark mode */
+}
+
+.navbar .theme-toggle-button .moon-icon {
+    color: #1e3a8a; /* Moon icon color for light mode */
+}
+
+/* Hero Section styles */
+/* Base styles */
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+  }
+  
+  /* Hero section */
+  .hero-section {
+    position: relative;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  
+  /* Background video */
+  .video-background {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+  }
+  
+  .background-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  /* Background overlay */
+  .background-overlay {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(29, 78, 216, 0.6); /* Light theme gradient */
+    z-index: 1;
+  }
+  
+  /* Dark theme overlay */
+  .hero-section.dark .background-overlay {
+    background-color: #1f2937; /* Dark theme background */
+  }
+  
+  /* Hero content */
+  .hero-content {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    color: white;
+    padding: 1.5rem;
+  }
+  
+  .hero-title {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    animation: fadeIn 1s ease-in-out;
+  }
+  
+  .hero-subtitle {
+    font-size: 1.25rem;
+    margin-bottom: 2rem;
+    opacity: 0.9;
+    animation: fadeIn 1.5s ease-in-out;
+  }
+  
+  /* Buttons */
+  .hero-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+  }
+  
+  .btn {
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+  }
+  
+  .book-appointment {
+    background-color: white;
+    color: #1d4ed8; /* Blue color */
+  }
+  
+  .book-appointment:hover {
+    background-color: #ebf4ff; /* Lighter blue on hover */
+    transform: scale(1.05);
+  }
+  
+  .admin-dashboard {
+    background-color: #1e3a8a; /* Dark blue color */
+    color: white;
+  }
+  
+  .admin-dashboard:hover {
+    background-color: #1c355b; /* Darker blue on hover */
+    transform: scale(1.05);
+  }
+  
+  /* Dark theme button styles */
+  .hero-section.dark .book-appointment {
+    background-color: #1d4ed8; /* Blue background */
+    color: white;
+  }
+  
+  .hero-section.dark .book-appointment:hover {
+    background-color: #2563eb; /* Darker blue on hover */
+  }
+  
+  .hero-section.dark .admin-dashboard {
+    background-color: #16a34a; /* Green color */
+  }
+  
+  .hero-section.dark .admin-dashboard:hover {
+    background-color: #15803d; /* Darker green on hover */
+  }
+  
+  /* Animations */
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+/* Features Overview styles */
+/* General styles for the section */
+.features-section {
+    padding-top: 7rem; /* Equivalent to py-28 */
+    padding-bottom: 5rem; /* Equivalent to py-20 */
+    background-color: #ffffff; /* Default light theme background */
+  }
+  
+  .features-section.dark-theme {
+    background-color: #1f2937; /* Dark theme background */
+  }
+  
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem; /* Equivalent to px-7 */
+  }
+  
+  .features-title {
+    font-size: 1.875rem; /* Equivalent to text-3xl */
+    font-weight: 700; /* Equivalent to font-bold */
+    text-align: center;
+    margin-bottom: 3rem; /* Equivalent to mb-12 */
+    color: #1e3a8a; /* Default light theme title color */
+  }
+  
+  .features-title.dark-theme {
+    color: #ffffff; /* Dark theme title color */
+  }
+  
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 2rem; /* Equivalent to gap-8 */
+  }
+  
+  @media (min-width: 768px) {
+    .features-grid {
+      grid-template-columns: repeat(2, 1fr); /* Equivalent to md:grid-cols-2 */
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .features-grid {
+      grid-template-columns: repeat(4, 1fr); /* Equivalent to lg:grid-cols-4 */
+    }
+  }
+  
+  .feature-item {
+    background-color: #f0f4f8; /* Default light theme card background */
+    padding: 2rem; /* Equivalent to p-8 */
+    border-radius: 0.5rem; /* Equivalent to rounded-lg */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Equivalent to shadow-lg */
+    transition: box-shadow 0.3s ease; /* Equivalent to transition-shadow duration-300 */
+  }
+  
+  .feature-item.dark-theme {
+    background-color: #374151; /* Dark theme card background */
+  }
+  
+  .feature-item:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Equivalent to hover:shadow-xl */
+  }
+  
+  .feature-title {
+    font-size: 1.25rem; /* Equivalent to text-xl */
+    font-weight: 600; /* Equivalent to font-semibold */
+    margin-bottom: 1rem; /* Equivalent to mb-4 */
+    color: #1e40af; /* Default light theme text color */
+  }
+  
+  .feature-title.dark-theme {
+    color: #ffffff; /* Dark theme text color */
+  }
+  
+  .feature-description {
+    color: #4b5563; /* Default light theme text color */
+  }
+  
+  .feature-description.dark-theme {
+    color: #9ca3af; /* Dark theme text color */
+  }
+  
+
+/* Benefits Section styles */
+/* General styles for the section */
+.benefits-section {
+    padding-bottom: 10rem; /* Equivalent to pb-40 */
+    padding-top: 3rem; /* Equivalent to pt-12 */
+    background-color: #f0f9ff; /* Default light theme background */
+  }
+  
+  .benefits-section.dark-theme {
+    background-color: #1f2937; /* Dark theme background */
+  }
+  
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem; /* Equivalent to px-6 */
+  }
+  
+  .benefits-title {
+    font-size: 1.875rem; /* Equivalent to text-3xl */
+    font-weight: 700; /* Equivalent to font-bold */
+    text-align: center;
+    margin-bottom: 3rem; /* Equivalent to mb-12 */
+    color: #1e3a8a; /* Default light theme title color */
+  }
+  
+  .benefits-title.dark-theme {
+    color: #ffffff; /* Dark theme title color */
+  }
+  
+  .benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 2rem; /* Equivalent to gap-8 */
+  }
+  
+  @media (min-width: 768px) {
+    .benefits-grid {
+      grid-template-columns: repeat(2, 1fr); /* Equivalent to md:grid-cols-2 */
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .benefits-grid {
+      grid-template-columns: repeat(3, 1fr); /* Equivalent to lg:grid-cols-3 */
+    }
+  }
+  
+  .benefit-item {
+    background-color: #ffffff; /* Default light theme card background */
+    padding: 1.5rem; /* Equivalent to p-6 */
+    border-radius: 0.5rem; /* Equivalent to rounded-lg */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Equivalent to shadow-lg */
+    text-align: center;
+    transition: transform 0.3s ease; /* Equivalent to transition-transform duration-300 */
+  }
+  
+  .benefit-item.dark-theme {
+    background-color: #374151; /* Dark theme card background */
+  }
+  
+  .benefit-item:hover {
+    transform: scale(1.05); /* Equivalent to hover:scale-105 */
+  }
+  
+  .benefit-icon {
+    background-color: #2563eb; /* Default light theme icon background */
+    color: #ffffff;
+    border-radius: 50%;
+    padding: 1rem; /* Equivalent to p-4 */
+    display: inline-block;
+    margin-bottom: 1rem; /* Equivalent to mb-4 */
+  }
+  
+  .benefit-icon.dark-theme {
+    background-color: #2563eb; /* Dark theme icon background (unchanged) */
+  }
+  
+  .icon {
+    font-size: 1.875rem; /* Equivalent to text-3xl */
+  }
+  
+  .benefit-title {
+    font-size: 1.25rem; /* Equivalent to text-xl */
+    font-weight: 600; /* Equivalent to font-semibold */
+    margin-bottom: 0.5rem; /* Equivalent to mb-2 */
+    color: #1e40af; /* Default light theme text color */
+  }
+  
+  .benefit-title.dark-theme {
+    color: #ffffff; /* Dark theme text color */
+  }
+  
+  .benefit-description {
+    color: #4b5563; /* Default light theme text color */
+  }
+  
+  .benefit-description.dark-theme {
+    color: #e5e7eb; /* Dark theme text color */
+  }
+  
+
+/* Testimonials Section styles */
+/* General styles for the section */
+.testimonials-section {
+    padding: 5rem 0; /* Equivalent to py-20 */
+    background-color: #ffffff; /* Default light theme background */
+  }
+  
+  .testimonials-section.dark-theme {
+    background-color: #1f2937; /* Dark theme background */
+  }
+  
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem; /* Equivalent to px-6 */
+  }
+  
+  .testimonials-title {
+    font-size: 1.875rem; /* Equivalent to text-3xl */
+    font-weight: 700; /* Equivalent to font-bold */
+    text-align: center;
+    margin-bottom: 3rem; /* Equivalent to mb-12 */
+    color: #1e3a8a; /* Default light theme title color */
+  }
+  
+  .testimonials-title.dark-theme {
+    color: #ffffff; /* Dark theme title color */
+  }
+  
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 2rem; /* Equivalent to gap-8 */
+  }
+  
+  @media (min-width: 768px) {
+    .testimonials-grid {
+      grid-template-columns: repeat(2, 1fr); /* Equivalent to md:grid-cols-2 */
+    }
+  }
+  
+  .testimonial-item {
+    background-color: #f0f9ff; /* Default light theme card background */
+    padding: 1.5rem; /* Equivalent to p-6 */
+    border-radius: 0.75rem; /* Equivalent to rounded-xl */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Equivalent to shadow-lg */
+    border: 1px solid #e5e7eb; /* Default light theme border */
+    text-align: center;
+  }
+  
+  .testimonial-item.dark-theme {
+    background-color: #374151; /* Dark theme card background */
+    border: 1px solid #4b5563; /* Dark theme border */
+  }
+  
+  .testimonial-text {
+    margin-bottom: 1rem; /* Equivalent to mb-4 */
+    color: #4b5563; /* Default light theme text color */
+  }
+  
+  .testimonial-text.dark-theme {
+    color: #d1d5db; /* Dark theme text color */
+  }
+  
+  .testimonial-author {
+    font-weight: 600; /* Equivalent to font-semibold */
+    color: #1e40af; /* Default light theme text color */
+  }
+  
+  .testimonial-author.dark-theme {
+    color: #60a5fa; /* Dark theme text color */
+  }
+  
+/* Footer styles */
+/* Base styles for the footer */
+.footer {
+    padding-top: 5rem; /* Equivalent to pt-20 */
+    padding-bottom: 2.5rem; /* Equivalent to pb-10 */
+    padding-left: 2.5rem; /* Equivalent to px-10 */
+    padding-right: 2.5rem; /* Equivalent to px-10 */
+    background-color: #1e3a8a; /* Default light theme background */
+    color: #ffffff; /* Default light theme text color */
+  }
+  
+  .footer.dark-theme {
+    background-color: #1f2937; /* Dark theme background */
+    color: #d1d5db; /* Dark theme text color */
+  }
+  
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem; /* Equivalent to px-6 */
+  }
+  
+  .footer-grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 2rem; /* Equivalent to gap-8 */
+  }
+  
+  @media (min-width: 768px) {
+    .footer-grid {
+      grid-template-columns: repeat(4, 1fr); /* Equivalent to md:grid-cols-4 */
+    }
+  }
+  
+  .footer-title {
+    font-size: 1.125rem; /* Equivalent to text-lg */
+    font-weight: 600; /* Equivalent to font-semibold */
+    margin-bottom: 1rem; /* Equivalent to mb-4 */
+  }
+  
+  .footer-text {
+    color: #e5e7eb; /* Default light theme text color */
+  }
+  
+  .footer.dark-theme .footer-text {
+    color: #9ca3af; /* Dark theme text color */
+  }
+  
+  .footer-link-list {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .footer-link-list li {
+    margin-bottom: 0.5rem; /* Equivalent to space-y-2 */
+  }
+  
+  .footer-link {
+    color: #e5e7eb; /* Default light theme link color */
+    text-decoration: none;
+  }
+  
+  .footer.dark-theme .footer-link {
+    color: #d1d5db; /* Dark theme link color */
+  }
+  
+  .footer-link:hover {
+    color: #ffffff; /* Hover color */
+  }
+  
+  .footer-socials {
+    display: flex;
+    gap: 1rem; /* Equivalent to space-x-4 */
+  }
+  
+  .footer-social {
+    color: #e5e7eb; /* Default light theme social icon color */
+    text-decoration: none;
+    font-size: 1.5rem; /* Adjust size if necessary */
+  }
+  
+  .footer.dark-theme .footer-social {
+    color: #d1d5db; /* Dark theme social icon color */
+  }
+  
+  .footer-social:hover {
+    color: #ffffff; /* Hover color */
+  }
+  
+
+  /* /admin-dashboard */

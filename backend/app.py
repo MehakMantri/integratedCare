@@ -6,7 +6,6 @@ from flask_migrate import Migrate
 from datetime import datetime
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from math import ceil
-from flask_cors import CORS
 
 
 
@@ -23,7 +22,6 @@ migrate = Migrate(app, db)
 with app.app_context():
     db.create_all()
 
-CORS(app)  # This will enable CORS for all routes
 
 # Models        
 class User(db.Model,UserMixin):
@@ -315,57 +313,44 @@ def mark_done(id):
 
 
 @app.route('/bedinfo')
+@login_required
 def bedinfo():
+    # Get all floors
     floors = Floordb.query.all()
-    floors_data = []
+    # Fetch the floor_count parameter from the request, default to None if not provided
+    floor_count_param = request.args.get('floor_count', type=int)  # To avoid confusion, renamed it to floor_count_param
+    
+    # Create a list to store information about each floor
+    floor_data = []
 
     for floor in floors:
-        floor_data = {
-            'floor_count': floor.floor_count,
-            'total_beds': len(floor.beds),
-            'allotted_beds': sum(1 for bed in floor.beds if bed.is_allotted),
-            'non_allotted_beds': sum(1 for bed in floor.beds if not bed.is_allotted),
-            'beds': [{
-                'id': bed.id,
-                'bed_number': bed.bed_number,
-                'is_allotted': bed.is_allotted,
-                'allotted_by': bed.allotted_by
-            } for bed in floor.beds]
-        }
-        floors_data.append(floor_data)
-
-    response_data = {'floors': floors_data}
-    print("Response data:", response_data)  # Add this line
-    return jsonify(response_data)
-
-@app.route('/allot_bed/<int:bed_id>', methods=['POST'])
-@login_required
-def allot_bed(bed_id):
-    data = request.json
-    allotted_by = data.get('allotted_by')
+        # Get the total number of beds for each floor
+        total_beds = Beddb.query.filter_by(floor_id=floor.id).count()
+        # Get the number of allotted beds for each floor
+        allotted_beds = Beddb.query.filter_by(floor_id=floor.id, is_allotted=True).count()
+        # Get the number of non-allotted beds for each floor
+        non_allotted_beds = total_beds - allotted_beds
+        
+        # Append data to floor_data list
+        floor_data.append({
+            'floor_count': floor.floor_count,  # Using floor_count attribute correctly
+            'total_beds': total_beds,
+            'allotted_beds': allotted_beds,
+            'non_allotted_beds': non_allotted_beds
+        })
     
-    bed = Beddb.query.get_or_404(bed_id)
-    
-    if allotted_by:
-        bed.is_allotted = True
-        bed.allotted_by = allotted_by
-        db.session.commit()
-        return jsonify({'message': 'Bed allocated successfully'}), 200
-    else:
-        return jsonify({'message': 'No patient ID provided'}), 400
+    # Fetch non-allotted beds across all floors if needed for further processing
+    non_allotted_beds_all_floors = Beddb.query.filter_by(is_allotted=False).all()
 
-@app.route('/unallot_bed/<int:bed_id>', methods=['POST'])
-@login_required
-def unallot_bed(bed_id):
-    bed = Beddb.query.get_or_404(bed_id)
+    # Render the template with the collected data
+    return render_template(
+        'beds.html', 
+        floor_count=floor_count_param, 
+        floors=floor_data, 
+        floor_data=floor_data,  # Pass the calculated data for each floor
+        non_allotted_beds=non_allotted_beds_all_floors
+    )
     
-    if bed.is_allotted:
-        bed.is_allotted = False
-        bed.allotted_by = None
-        db.session.commit()
-        return jsonify({'message': 'Bed successfully unallotted'}), 200
-    else:
-        return jsonify({'message': 'Bed is not currently allotted'}), 400
 
 @app.route('/floorinfo', methods=['GET', 'POST'])
 @login_required

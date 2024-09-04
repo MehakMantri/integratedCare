@@ -3,57 +3,698 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Hospital Admin Dashboard</title>
     <style>
-        /* Additional styles for sidebar */
-        .sidebar {
-            height: 100vh; /* Full height */
-            width: 250px; /* Sidebar width */
-            position: fixed; /* Fixed position */
-            left: 0; /* Stick to the left */
-            top: 0;
-            background-color: #f8f9fa;
-            padding-top: 20px;
+        /* Base styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
         }
-        .content {
-            margin-left: 250px; /* Adjust content to the right of the sidebar */
+        .flex { display: flex; }
+        .h-screen { height: 100vh; }
+        .bg-blue-50 { background-color: #eff6ff; }
+        .text-gray-900 { color: #111827; }
+
+        /* Sidebar styles */
+        .sidebar {
+            width: 256px;
+            background-color: #1e40af;
+            color: white;
+            padding: 1.75rem 0.5rem;
+        }
+        .sidebar nav a {
+            display: block;
+            padding: 0.625rem 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .sidebar nav a:hover { background-color: #1e3a8a; }
+        .sidebar nav a.active { background-color: #1d4ed8; }
+
+        /* Main content area */
+        .main-content {
+            flex: 1;
+            overflow-x: hidden;
+            overflow-y: auto;
+            padding: 1.5rem;
+        }
+
+        /* Dashboard card styles */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .dashboard-card {
+            background-color: white;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+        }
+        .dashboard-card h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        .dashboard-card p {
+            font-size: 1.875rem;
+            font-weight: 700;
+        }
+
+        /* Table styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 0.5rem 1rem;
+            text-align: left;
+        }
+        thead { background-color: #f3f4f6; }
+        tbody tr { border-bottom: 1px solid #e5e7eb; }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .sidebar {
+                position: absolute;
+                transform: translateX(-100%);
+            }
+            .dashboard-grid { grid-template-columns: 1fr; }
+        }
+
+        .table-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .table-section {
+            flex: 1;
+            min-width: 300px;
+        }
+        .dashboard-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .dashboard-table th {
+            background-color: #f3f4f6;
+            text-align: left;
+            padding: 10px;
+        }
+        .dashboard-table td {
+            padding: 10px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .status-indicator {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.875rem;
+        }
+        .status-low-stock {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+        .status-expiring-soon {
+            background-color: #fed7aa;
+            color: #9a3412;
+        }
+        .status-reorder {
+            background-color: #fecaca;
+            color: #991b1b;
+        }
+
+        .main-content .section {
+            display: none;
+        }
+        .main-content .section.active {
+            display: block;
+        }
+        /* bed-availability */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
             padding: 20px;
         }
-    </style>
+        h2 {
+            color: #1e40af;
+            margin-bottom: 20px;
+        }
+        select {
+            padding: 8px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        .ward-grid {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .ward-card {
+            flex: 1;
+            background-color: #e6f0ff;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            font-size: 0.9rem;
+        }
+        .ward-card h3 {
+            color: #1e40af;
+            margin-top: 0;
+            margin-bottom: 5px;
+            font-size: 1rem;
+        }
+        .ward-card p {
+            margin: 2px 0;
+        }
+        .bed-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        .bed-card {
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .bed-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .bed-status {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+        .status-available { background-color: #dcfce7; color: #166534; }
+        .status-occupied { background-color: #fee2e2; color: #991b1b; }
+        .status-maintenance { background-color: #fef3c7; color: #92400e; }
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        button {
+            width: 100%;
+            padding: 8px;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn-allocate { background-color: #22c55e; }
+        .btn-allocate:hover { background-color: #16a34a; }
+        .btn-discharge { background-color: #ef4444; }
+        .btn-discharge:hover { background-color: #dc2626; }
+        .icon { margin-right: 5px; }
+
+        @media (max-width: 768px) {
+            .ward-grid {
+                flex-direction: column;
+            }
+            .ward-card {
+                margin-bottom: 10px;
+            }
+        }
+       </style>
 </head>
 <body>
+    <div class="flex h-screen bg-blue-50 text-gray-900">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <nav>
+                <a class="active" data-section="dashboard">Dashboard</a>
+                <a data-section="patient-management">Patient Management</a>
+                <a data-section="queuing-models">Queuing Models</a>
+                <a data-section="bed-availability">Bed Availability</a>
+                <a data-section="inventory-management">Inventory Management</a>
+            </nav>
+        </div>
 
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <h4 class="text-center">Admin Dashboard</h4>
-        <div class="list-group mt-3">
-            <a class="list-group-item list-group-item-action" href="{{ url_for('admin_dashboard') }}">Dashboard</a>
-            <a href="{{ url_for('patient_management') }}" class="list-group-item list-group-item-action">Patient Managemt</a>
-            <a href="{{ url_for('queue_by_section', section='orthology') }}" class="list-group-item list-group-item-action">Queing Models</a>
-            <a href="{{ url_for('floorinfo') }}" class="list-group-item list-group-item-action">Bed Availability</a>
-            <a href="{{ url_for('view_inventory') }}" class="list-group-item list-group-item-action">Inventory Managemt</a>
-            <a href="{{ url_for('add_medicine') }}" class="list-group-item list-group-item-action">Add Medicine</a>
-            {% if current_user.is_authenticated %}
-            <a class="list-group-item list-group-item-action" href="{{ url_for('logout') }}">Logout</a>
-            {% else %}
-            <a class="list-group-item list-group-item-action" href="{{ url_for('login') }}">Login</a>
-            <a class="list-group-item list-group-item-action" href="{{ url_for('register') }}">Register</a>
-            {% endif %}
+        <!-- Main content area -->
+        <div class="main-content">
+            <div id="dashboard" class="section active">
+                <!-- <header>
+                    <h1>Hospital Admin Dashboard</h1>
+                </header> -->
+                <main>
+                    <!-- Dashboard cards -->
+                    <div class="dashboard-grid">
+                        <div class="dashboard-card">
+                            <h3>Total Patients</h3>
+                            <p>1250</p>
+                        </div>
+                        <div class="dashboard-card">
+                            <h3>Available Beds</h3>
+                            <p>45</p>
+                        </div>
+                        <div class="dashboard-card">
+                            <h3>Today's Appointments</h3>
+                            <p>78</p>
+                        </div>
+                        <div class="dashboard-card">
+                            <h3>Total Doctors</h3>
+                            <p>32</p>
+                        </div>
+                    </div>
+
+                    <!-- Charts would go here, but they require JavaScript libraries -->
+
+                    <!-- Recent Admissions Table -->
+                    <div class="table-container">
+                        <div class="table-section">
+                            <h3>Recent Admissions</h3>
+                            <table class="dashboard-table">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Department</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>John Doe</td>
+                                        <td>Cardiology</td>
+                                        <td>2024-03-20</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Jane Smith</td>
+                                        <td>Neurology</td>
+                                        <td>2024-03-19</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Bob Johnson</td>
+                                        <td>Orthopedics</td>
+                                        <td>2024-03-18</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Inventory Alerts Table -->
+                        <div class="table-section">
+                            <h3>Inventory Alerts</h3>
+                            <table class="dashboard-table">
+                                <thead>
+                                    <tr>
+                                        <th>Item</th>
+                                        <th>Status</th>
+                                        <th>Quantity</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Surgical Masks</td>
+                                        <td><span class="status-indicator status-low-stock">Low Stock</span></td>
+                                        <td>100</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Antibiotics</td>
+                                        <td><span class="status-indicator status-expiring-soon">Expiring Soon</span></td>
+                                        <td>500</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Syringes</td>
+                                        <td><span class="status-indicator status-reorder">Reorder</span></td>
+                                        <td>200</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </main>
+            </div>
+            
+            <div id="bed-availability" class="section">
+                <h2 class="text-2xl font-bold mb-4 text-blue-800">Bed Availability</h2>
+                
+                <div class="mb-4">
+                    <select id="ward-select" class="p-2 rounded bg-white text-gray-800 border">
+                        <option value="1">General Ward</option>
+                        <option value="2">ICU</option>
+                        <option value="3">Pediatric Ward</option>
+                        <option value="4">Maternity Ward</option>
+                    </select>
+                </div>
+
+                <div class="ward-grid">
+                    <div class="ward-card">
+                        <h3 class="font-bold text-blue-800 mb-2">General Ward</h3>
+                        <p>Total Beds: 5</p>
+                        <p>Available: 2</p>
+                        <p>Occupied: 2</p>
+                        <p>Maintenance: 1</p>
+                    </div>
+                    <div class="ward-card">
+                        <h3 class="font-bold text-blue-800 mb-2">ICU</h3>
+                        <p>Total Beds: 3</p>
+                        <p>Available: 2</p>
+                        <p>Occupied: 1</p>
+                        <p>Maintenance: 0</p>
+                    </div>
+                    <div class="ward-card">
+                        <h3 class="font-bold text-blue-800 mb-2">Pediatric Ward</h3>
+                        <p>Total Beds: 4</p>
+                        <p>Available: 2</p>
+                        <p>Occupied: 2</p>
+                        <p>Maintenance: 0</p>
+                    </div>
+                    <div class="ward-card">
+                        <h3 class="font-bold text-blue-800 mb-2">Maternity Ward</h3>
+                        <p>Total Beds: 3</p>
+                        <p>Available: 2</p>
+                        <p>Occupied: 1</p>
+                        <p>Maintenance: 0</p>
+                    </div>
+                </div>
+
+                <div class="ward-card">
+                    <h3 class="font-bold text-blue-800 mb-2">General Ward - Bed Details</h3>
+                    <div class="bed-grid">
+                        <div class="bed-card" data-bed-id="101">
+                            <div class="bed-header">
+                                <span class="font-semibold">Bed 101</span>
+                                <span class="icon">🛏️</span>
+                            </div>
+                            <p>Type: General</p>
+                            <span class="bed-status status-available">Available</span>
+                            <input type="text" placeholder="Patient Name" class="p-1 rounded bg-white text-gray-800 border w-full mb-2">
+                            <button class="btn-allocate">
+                                <span class="icon">➕</span> Allocate
+                            </button>
+                        </div>
+                        <div class="bed-card" data-bed-id="102">
+                            <div class="bed-header">
+                                <span class="font-semibold">Bed 102</span>
+                                <span class="icon">🛏️</span>
+                            </div>
+                            <p>Type: General</p>
+                            <span class="bed-status status-occupied">Occupied</span>
+                            <p>Patient: John Doe</p>
+                            <button class="btn-discharge">
+                                <span class="icon">➖</span> Discharge
+                            </button>
+                        </div>
+                        <!-- Add more bed cards as needed -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Add placeholder sections for other menu items -->
+            <div id="patient-management" class="section">
+                <h2>Patient Management</h2>
+                <!-- Add content for patient management here -->
+            </div>
+            
+            <div id="queuing-models" class="section">
+                <h2>Queuing Models</h2>
+                <!-- Add content for queuing models here -->
+            </div>
+            
+            <div id="inventory-management" class="section" style="padding: 1.5rem; background-color: white; color: #1a202c; border-radius: 0.5rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);">
+                <h2 style="font-size: 1.5rem; font-weight: bold; margin-bottom: 1rem; color: #2c5282;">Inventory Management</h2>
+                
+                <div style="margin-bottom: 1rem;">
+                    <select id="category-select" style="padding: 0.5rem; border-radius: 0.25rem; background-color: white; color: #1a202c; border: 1px solid #e2e8f0;">
+                        <option value="Medication">Medication</option>
+                        <option value="Medical Supplies">Medical Supplies</option>
+                        <option value="Equipment">Equipment</option>
+                    </select>
+                </div>
+            
+                <div style="margin-bottom: 1.5rem; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
+                    <input type="text" id="new-item-name" placeholder="Item Name" style="padding: 0.5rem; border-radius: 0.25rem; background-color: white; color: #1a202c; border: 1px solid #e2e8f0;">
+                    <input type="number" id="new-item-quantity" placeholder="Quantity" style="padding: 0.5rem; border-radius: 0.25rem; background-color: white; color: #1a202c; border: 1px solid #e2e8f0;">
+                    <input type="text" id="new-item-unit" placeholder="Unit (e.g., tablets, pieces)" style="padding: 0.5rem; border-radius: 0.25rem; background-color: white; color: #1a202c; border: 1px solid #e2e8f0;">
+                    <input type="number" id="new-item-min-stock" placeholder="Minimum Stock Level" style="padding: 0.5rem; border-radius: 0.25rem; background-color: white; color: #1a202c; border: 1px solid #e2e8f0;">
+                    <input type="date" id="new-item-expiry-date" placeholder="Expiry Date (if applicable)" style="padding: 0.5rem; border-radius: 0.25rem; background-color: white; color: #1a202c; border: 1px solid #e2e8f0;">
+                    <button id="add-new-item" style="background-color: #4299e1; color: white; padding: 0.5rem 1rem; border-radius: 0.25rem; hover:background-color: #3182ce;">Add New Item</button>
+                </div>
+            
+                <div style="margin-bottom: 1.5rem; background-color: #ebf8ff; padding: 1rem; border-radius: 0.25rem; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);">
+                    <h3 style="font-weight: bold; color: #2c5282; margin-bottom: 0.5rem;">Current Inventory</h3>
+                    <table style="width: 100%;">
+                        <thead>
+                            <tr style="background-color: #bee3f8;">
+                                <th style="padding: 0.5rem; text-align: left;">Name</th>
+                                <th style="padding: 0.5rem; text-align: left;">Category</th>
+                                <th style="padding: 0.5rem; text-align: left;">Quantity</th>
+                                <th style="padding: 0.5rem; text-align: left;">Min Stock</th>
+                                <th style="padding: 0.5rem; text-align: left;">Expiry Date</th>
+                                <th style="padding: 0.5rem; text-align: left;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inventory-table-body">
+                            <!-- Inventory items will be dynamically added here -->
+                        </tbody>
+                    </table>
+                </div>
+            
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                    <div style="background-color: #ebf8ff; padding: 1rem; border-radius: 0.25rem; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);">
+                        <h3 style="font-weight: bold; color: #2c5282; margin-bottom: 0.5rem;">Pending Orders</h3>
+                        <ul id="pending-orders-list" style="list-style-type: none; padding: 0;">
+                            <!-- Pending orders will be dynamically added here -->
+                        </ul>
+                    </div>
+            
+                    <div style="background-color: #ebf8ff; padding: 1rem; border-radius: 0.25rem; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);">
+                        <h3 style="font-weight: bold; color: #2c5282; margin-bottom: 0.5rem;">Recent Usage History</h3>
+                        <ul id="usage-history-list" style="list-style-type: none; padding: 0;">
+                            <!-- Usage history will be dynamically added here -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Main Content Area -->
-    <div class="content">
-        <h1>Welcome to the Admin Dashboard</h1>
-        <!-- Your main dashboard content goes here -->
-        <p>Here you can manage all aspects of the system, such as floors, beds, users, and inventory.</p>
-        <h5>Total Patients: {{ total }}</h5>
-        <h5> Total Non-Allotted Beds: {{ total_non_allotted_beds }}</h5>
-        <h5> Total Doctors: 32</h5>
-    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebarLinks = document.querySelectorAll('.sidebar nav a');
+            const sections = document.querySelectorAll('.main-content .section');
 
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz4fnFO9oBO8Fhch0GVDPBCWETmKp1k4GfECR4FQPeE77V7H0aUEN/xd8q" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-pzjw8f+ua7Kw1TIbW66r8zh7N3jF5EN2eZx4O4O3deGOSbOt6G1g6k5xD5L95L6f" crossorigin="anonymous"></script>
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const sectionId = this.getAttribute('data-section');
+
+                    // Hide all sections
+                    sections.forEach(section => section.classList.remove('active'));
+
+                    // Show the selected section
+                    document.getElementById(sectionId).classList.add('active');
+
+                    // Update active state in sidebar
+                    sidebarLinks.forEach(link => link.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+        });
+
+        // Add this new function to handle bed allocation and discharge
+        function handleBedAction(action, bedId) {
+            const bedCard = document.querySelector(`[data-bed-id="${bedId}"]`);
+            if (!bedCard) {
+                console.error(`No bed card found with id ${bedId}`);
+                return;
+            }
+            
+            const statusSpan = bedCard.querySelector('.bed-status');
+            const patientInput = bedCard.querySelector('input[type="text"]');
+            const actionButton = bedCard.querySelector('button');
+            
+            if (action === 'allocate') {
+                const patientName = patientInput.value.trim();
+                if (patientName) {
+                    statusSpan.textContent = 'Occupied';
+                    statusSpan.className = 'bed-status status-occupied';
+                    bedCard.innerHTML += `<p>Patient: ${patientName}</p>`;
+                    actionButton.textContent = '➖ Discharge';
+                    actionButton.className = 'btn-discharge';
+                    actionButton.onclick = () => handleBedAction('discharge', bedId);
+                }
+            } else if (action === 'discharge') {
+                statusSpan.textContent = 'Available';
+                statusSpan.className = 'bed-status status-available';
+                bedCard.querySelector('p:last-child').remove();
+                actionButton.textContent = '➕ Allocate';
+                actionButton.className = 'btn-allocate';
+                actionButton.onclick = () => handleBedAction('allocate', bedId);
+                bedCard.insertBefore(patientInput, actionButton);
+            }
+        }
+
+        // Ensure this code runs after the DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.bed-card button').forEach(button => {
+                const bedCard = button.closest('.bed-card');
+                if (bedCard) {
+                    const bedId = bedCard.dataset.bedId;
+                    if (bedId) {
+                        const action = button.classList.contains('btn-allocate') ? 'allocate' : 'discharge';
+                        button.onclick = () => handleBedAction(action, bedId);
+                    } else {
+                        console.error('Bed card is missing data-bed-id attribute');
+                    }
+                } else {
+                    console.error('Button is not within a bed card');
+                }
+            });
+        });
+
+    // Inventory Management
+    document.addEventListener('DOMContentLoaded', function() {
+        let inventory = [
+            { id: 1, name: 'Paracetamol', category: 'Medication', quantity: 1000, unit: 'tablets', minStock: 500, expiryDate: '2024-12-31' },
+            { id: 2, name: 'Ibuprofen', category: 'Medication', quantity: 750, unit: 'tablets', minStock: 300, expiryDate: '2024-10-31' },
+            { id: 3, name: 'Surgical Masks', category: 'Medical Supplies', quantity: 5000, unit: 'pieces', minStock: 1000, expiryDate: null },
+            { id: 4, name: 'Disposable Gloves', category: 'Medical Supplies', quantity: 10000, unit: 'pairs', minStock: 2000, expiryDate: null },
+            { id: 5, name: 'Ventilator', category: 'Equipment', quantity: 10, unit: 'units', minStock: 2, expiryDate: null },
+            { id: 6, name: 'Defibrillator', category: 'Equipment', quantity: 5, unit: 'units', minStock: 1, expiryDate: null },
+        ];
+        let orders = [];
+        let usageHistory = [];
+
+        const categorySelect = document.getElementById('category-select');
+        const inventoryTableBody = document.getElementById('inventory-table-body');
+        const pendingOrdersList = document.getElementById('pending-orders-list');
+        const usageHistoryList = document.getElementById('usage-history-list');
+
+        function updateInventoryTable() {
+            inventoryTableBody.innerHTML = '';
+            inventory.filter(item => item.category === categorySelect.value).forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="p-2">${item.name}</td>
+                    <td class="p-2">${item.category}</td>
+                    <td class="p-2 ${getStatusColor(item.quantity, item.minStock)}">${item.quantity} ${item.unit}</td>
+                    <td class="p-2">${item.minStock} ${item.unit}</td>
+                    <td class="p-2">${item.expiryDate || 'N/A'}</td>
+                    <td class="p-2">
+                        <button onclick="updateQuantity(${item.id}, 1)" class="mr-2 bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600">+</button>
+                        <button onclick="updateQuantity(${item.id}, -1)" class="mr-2 bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600">-</button>
+                        ${item.quantity <= item.minStock ? `<button onclick="placeOrder(${item.id})" class="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600" title="Place Order">Order</button>` : ''}
+                    </td>
+                `;
+                inventoryTableBody.appendChild(row);
+            });
+        }
+
+        function getStatusColor(quantity, minStock) {
+            if (quantity <= minStock / 2) return 'bg-red-200 text-red-800';
+            if (quantity <= minStock) return 'bg-yellow-200 text-yellow-800';
+            return 'bg-green-200 text-green-800';
+        }
+
+        function updateQuantity(id, amount) {
+            const item = inventory.find(item => item.id === id);
+            if (item) {
+                const newQuantity = Math.max(0, item.quantity + amount);
+                item.quantity = newQuantity;
+                usageHistory.unshift({
+                    id: Date.now(),
+                    itemId: id,
+                    itemName: item.name,
+                    change: amount,
+                    newQuantity: newQuantity,
+                    date: new Date().toISOString()
+                });
+                updateInventoryTable();
+                updateUsageHistory();
+            }
+        }
+
+        function placeOrder(id) {
+            const item = inventory.find(item => item.id === id);
+            if (item) {
+                const orderQuantity = item.minStock * 2 - item.quantity;
+                orders.push({
+                    id: Date.now(),
+                    itemId: item.id,
+                    itemName: item.name,
+                    quantity: orderQuantity,
+                    status: 'Pending',
+                    date: new Date().toISOString()
+                });
+                updatePendingOrders();
+            }
+        }
+
+        function updatePendingOrders() {
+            pendingOrdersList.innerHTML = '';
+            orders.forEach(order => {
+                const li = document.createElement('li');
+                li.textContent = `${order.itemName}: ${order.quantity} units (Ordered on: ${new Date(order.date).toLocaleDateString()})`;
+                pendingOrdersList.appendChild(li);
+            });
+        }
+
+        function updateUsageHistory() {
+            usageHistoryList.innerHTML = '';
+            usageHistory.slice(0, 5).forEach(entry => {
+                const li = document.createElement('li');
+                li.textContent = `${entry.itemName}: ${entry.change > 0 ? '+' : ''}${entry.change} (New total: ${entry.newQuantity}) - ${new Date(entry.date).toLocaleString()}`;
+                usageHistoryList.appendChild(li);
+            });
+        }
+
+        categorySelect.addEventListener('change', updateInventoryTable);
+
+        document.getElementById('add-new-item').addEventListener('click', function() {
+            const name = document.getElementById('new-item-name').value;
+            const quantity = parseInt(document.getElementById('new-item-quantity').value);
+            const unit = document.getElementById('new-item-unit').value;
+            const minStock = parseInt(document.getElementById('new-item-min-stock').value);
+            const expiryDate = document.getElementById('new-item-expiry-date').value;
+
+            if (name && quantity && unit && minStock) {
+                inventory.push({
+                    id: Date.now(),
+                    name,
+                    category: categorySelect.value,
+                    quantity,
+                    unit,
+                    minStock,
+                    expiryDate: expiryDate || null
+                });
+                updateInventoryTable();
+                // Clear input fields
+                ['new-item-name', 'new-item-quantity', 'new-item-unit', 'new-item-min-stock', 'new-item-expiry-date'].forEach(id => {
+                    document.getElementById(id).value = '';
+                });
+            }
+        });
+
+        // Initial updates
+        updateInventoryTable();
+        updatePendingOrders();
+        updateUsageHistory();
+
+        // Check low stock every hour
+        setInterval(function() {
+            const lowStockItems = inventory.filter(item => item.quantity <= item.minStock);
+            if (lowStockItems.length > 0) {
+                alert(`Low stock alert for: ${lowStockItems.map(item => item.name).join(', ')}`);
+            }
+        }, 3600000);
+    });
+
+    </script>
 </body>
 </html>

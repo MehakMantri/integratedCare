@@ -6,7 +6,7 @@ function HeroSection() {
   const { isDarkTheme } = useTheme();
 
   return (
-    <section className={`relative h-screen flex items-center justify-center overflow-hidden ${isDarkTheme ? 'bg-gray-900' : 'bg-blue-100'}`}>
+    <section id="home" className={`relative h-screen flex items-center justify-center overflow-hidden ${isDarkTheme ? 'bg-gray-900' : 'bg-blue-100'}`}>
       {!isDarkTheme && (
         <div className="absolute inset-0">
           <video
